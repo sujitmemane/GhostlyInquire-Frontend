@@ -9,39 +9,42 @@ function Register() {
     register,
     reset,
     handleSubmit,
-    formState: { errors ,isSubmitSuccessful,isSubmitting,isSubmitted},
+    formState: { errors, isSubmitSuccessful, isSubmitting, isSubmitted },
   } = useForm();
 
-  console.log(errors);
   const onSubmit = (data) => {
     axios
-      .post("http://localhost:4000/api/user/register", data)
-      .then(function (response) {
-        console.log(response)
-        toast.success(response?.data?.message)
+      .post("http://localhost:3000/auth/register", data)
+      .then((res) => {
+        console.log("RETS", res);
+        if (res.status) {
+          toast.success(res.data.message);
+        }
       })
       .catch(function (error) {
-        console.log(error)
-        toast.error(error?.response?.data?.message)
+        console.log(error);
+          console.log("error in catch");
+
+        toast.error(error?.response?.data?.message);
       });
   };
 
-  const guestUser = (data)=>{
+  const guestUser = (data) => {
     axios
       .post("http://localhost:4000/api/user/login", data)
       .then(function (response) {
-        console.log(response)
-        toast.success(response?.data?.message)
+        console.log(response);
+        toast.success(response?.data?.message);
       })
       .catch(function (error) {
-        console.log(error)
-        toast.error(error?.response?.data?.message)
+        console.log(error);
+        toast.error(error?.response?.data?.message);
       });
-  }
+  };
 
-  useEffect(()=>{
-    reset()
-  },[isSubmitted])
+  useEffect(() => {
+    // reset();
+  }, [isSubmitSuccessful]);
   return (
     <section>
       <div className="grid grid-cols-1 lg:grid-cols-2 ">
@@ -51,7 +54,7 @@ function Register() {
               Register
             </h2>
             <p className="mt-2 text-base text-gray-600">
-              Already have an account?
+              Already have an account?{" "}
               <Link
                 to="/login"
                 className="font-medium text-black transition-all duration-200 hover:underline"
@@ -66,8 +69,7 @@ function Register() {
                     htmlFor="name"
                     className="text-base font-medium text-gray-900"
                   >
-                    {" "}
-                    Full Name{" "}
+                    Full Name
                   </label>
                   <div className="mt-2">
                     <input
@@ -90,16 +92,15 @@ function Register() {
                     htmlFor="name"
                     className="text-base font-medium text-gray-900"
                   >
-                    {" "}
-                   User Name
+                    User Name
                   </label>
                   <div className="mt-2">
                     <input
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
-                      placeholder="Full Name"
+                      placeholder="User Name"
                       id="name"
-                      {...register("username", {
+                      {...register("userName", {
                         required: {
                           value: true,
                           message: "Username is Required",
@@ -114,8 +115,7 @@ function Register() {
                     htmlFor="email"
                     className="text-base font-medium text-gray-900"
                   >
-                    {" "}
-                    Email  Address{" "}
+                    Email Address
                   </label>
                   <div className="mt-2">
                     <input
@@ -167,10 +167,12 @@ function Register() {
                   </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <button  disabled={isSubmitting} className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-extrathin leading-7 text-white hover:bg-black/80">
-                 { isSubmitting? "Letting In" :  "Get Started"}
+                  <button
+                    disabled={isSubmitting}
+                    className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-extrathin leading-7 text-white hover:bg-black/80"
+                  >
+                    {isSubmitting ? "Letting In" : "Get Started"}
                   </button>
-                
                 </div>
               </div>
             </form>
